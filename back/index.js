@@ -1,8 +1,15 @@
-const express = require("express");
-const cors = require("cors");
-const server = express();
-const port = 8080;
-const bodyParser = require("body-parser");
+import "dotenv/config";
+import app from "./src/app.js";
+import { sequelize } from "./src/database/connectionDB.js";
 
-server.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
-server.use(bodyParser.json({ limit: "50mb" }));
+const port = 3000 || process.env.PORT;
+
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("Connection has been established successfully.");
+    app.listen(port, () => console.log(`server run on port ${port}`));
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
+})();
